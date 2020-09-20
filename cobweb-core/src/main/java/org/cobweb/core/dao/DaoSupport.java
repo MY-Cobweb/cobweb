@@ -9,4 +9,5 @@ public class DaoSupport {
   public static String wrapValueQuota(Object value) {
     return "'" + value.toString() + "'";
   }
+
 }

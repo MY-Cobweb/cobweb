@@ -22,5 +22,5 @@ public class DataSourceEntity {
   private Integer port;
   private String user;
   private String password;
-  private Properties properties;
+  private String properties;
 }

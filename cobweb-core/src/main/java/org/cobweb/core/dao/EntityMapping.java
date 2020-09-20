@@ -5,10 +5,13 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import lombok.Getter;
 import lombok.Setter;
 import org.cobweb.core.annotation.Id;
 import org.cobweb.core.annotation.Table;
 import org.reflections.Reflections;
+import sun.reflect.FieldAccessor;
+import sun.reflect.ReflectionFactory;
 
 /**
  * Map information from table to entity;
@@ -17,16 +20,18 @@ import org.reflections.Reflections;
  * @since 0.0.1
  */
 @Setter
+@Getter
 public class EntityMapping {
 
   private static final Map<Class, EntityMapping> orm = new HashMap<>();
   private String table;
-  private Field id;
-  private final Map<String, Field> colFieldMap = new HashMap<>();
-  private final Map<Field, String> fieldColMap = new HashMap<>();
+  private FieldAccessor id;
+  private String idColumnName;
+  private final Map<String, FieldAccessor> colFieldMap = new HashMap<>();
+  private final Map<FieldAccessor, String> fieldColMap = new HashMap<>();
 
   public static void scanEntities() {
-    Reflections reflections = new Reflections("org.cobweb.core.dao");
+    Reflections reflections = new Reflections("org.cobweb.core.entity");
     Set<Class<?>> entitySet = reflections.getTypesAnnotatedWith(Table.class);
     for (Class<?> entity : entitySet) {
       EntityMapping entityMapping = new EntityMapping();
@@ -35,12 +40,15 @@ public class EntityMapping {
 
       for (Field field : entity.getDeclaredFields()) {
         Id id = field.getAnnotation(Id.class);
+        FieldAccessor fieldAccessor = ReflectionFactory.getReflectionFactory()
+            .newFieldAccessor(field, false);
+        String colName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, field.getName());
         if (id != null) {
-          entityMapping.setId(field);
+          entityMapping.setId(fieldAccessor);
+          entityMapping.setIdColumnName(colName);
         } else {
-          String colName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, field.getName());
-          entityMapping.colFieldMap.putIfAbsent(colName, field);
-          entityMapping.fieldColMap.putIfAbsent(field, colName);
+          entityMapping.colFieldMap.putIfAbsent(colName, fieldAccessor);
+          entityMapping.fieldColMap.putIfAbsent(fieldAccessor, colName);
         }
       }
       orm.putIfAbsent(entity, entityMapping);
@@ -54,22 +62,21 @@ public class EntityMapping {
 
   public static Object getIdValue(Class clazz, Object entity) throws IllegalAccessException {
     EntityMapping entityMapping = orm.get(clazz);
-    entityMapping.id.setAccessible(true);
     return entityMapping.id.get(entity);
   }
 
+  public static Map<FieldAccessor, String> getFieldColMap(Class clazz) {
+    EntityMapping entityMapping =  orm.get(clazz);
+    return entityMapping.getFieldColMap();
+  }
 
   public static String buildIdEqCondition(Class clazz, Object idValue) {
-    EntityMapping entityMapping = orm.get(clazz);
-    String colName = CaseFormat.LOWER_CAMEL
-        .to(CaseFormat.UPPER_UNDERSCORE, entityMapping.id.getName());
-    return colName + "=" + DaoSupport.wrapValueQuota(idValue);
+    return getIdColumn(clazz) + "=" + DaoSupport.wrapValueQuota(idValue);
   }
 
   public static String getIdColumn(Class clazz) {
     EntityMapping entityMapping = orm.get(clazz);
-    return CaseFormat.LOWER_CAMEL
-        .to(CaseFormat.UPPER_UNDERSCORE, entityMapping.id.getName());
+    return entityMapping.getIdColumnName();
   }
 
   public static void setColValue(Object entity, String col, Object value) {
