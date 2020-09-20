@@ -51,6 +51,8 @@
     <!-- dependency library version -->
     <junit.version>5.6.2</junit.version>
     <lombok.version>1.18.12</lombok.version>
+    <apache.common>3.11</apache.common>
+    <common.collections4>4.4</common.collections4>
     <reflections.version>0.9.12</reflections.version>
     <netty.version>4.1.52.Final</netty.version>
     <antlr4.version>4.8-1</antlr4.version>

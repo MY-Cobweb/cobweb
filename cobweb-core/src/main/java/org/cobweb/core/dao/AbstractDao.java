@@ -22,32 +22,22 @@ public abstract class AbstractDao<T> {
 
   private static final String POOL_NAME = "cobweb";
 
+  /**
+   * Find Entity by Id
+   *
+   * @param id
+   * @return Entity if exists
+   * @throws CobwebException
+   */
   public T findById(Long id) throws CobwebException {
     checkNotNull(id);
-    String sql = "SELECT * FROM " + getTableName() + "WHERE " + buildIdEq(id);
-    try (Connection conn = DataSourceManager.getConnection(POOL_NAME);
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        ResultSet rs = stmt.executeQuery()) {
-      List<T> result = ResultSetExtractor.extractValues(rs, getGenericClass());
-      if (!result.isEmpty()) {
-        return null;
-      } else {
-        return result.get(0);
-      }
-    } catch (SQLException e) {
-      throw new CobwebException(e);
-    }
+    String sql = Cql.cql().column(getIdCol()).is(id).toSql(getTableName());
+    return query(sql);
   }
 
   public List<T> findAll() throws CobwebException {
-    String sql = "SELECT * FROM " + getTableName();
-    try (Connection conn = DataSourceManager.getConnection(POOL_NAME);
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        ResultSet rs = stmt.executeQuery()) {
-      return ResultSetExtractor.extractValues(rs, getGenericClass());
-    } catch (SQLException e) {
-      throw new CobwebException(e);
-    }
+    String sql = Cql.cql().toSql(getTableName());
+    return queryList(sql);
   }
 
   public void update(T t) throws CobwebException {
@@ -64,7 +54,7 @@ public abstract class AbstractDao<T> {
     checkNotNull(id);
     String sql = "DELETE FROM " + getTableName() + "WHERE " + buildIdEq(id);
     try (Connection conn = DataSourceManager.getConnection(POOL_NAME);
-    PreparedStatement stmt = conn.prepareStatement(sql);) {
+        PreparedStatement stmt = conn.prepareStatement(sql);) {
       int row = stmt.executeUpdate();
       if (row < 1) {
         throw new CobwebException("DELETE BY ID FAILURE");
@@ -74,9 +64,43 @@ public abstract class AbstractDao<T> {
     }
   }
 
-  public void add(T t) {
+  public void insert(T t) {
     // TODO finish add function
     checkNotNull(t);
+
+  }
+
+  public T query(Cql cql) throws CobwebException {
+    String sql = cql.toSql(getTableName());
+    return query(sql);
+  }
+
+  public T query(String sql) throws CobwebException {
+    List<T> resultList = queryList(sql);
+    if (resultList != null && !resultList.isEmpty()) {
+      return resultList.get(0);
+    } else {
+      return null;
+    }
+  }
+
+  public List<T> queryList(Cql cql) throws CobwebException {
+    String sql = cql.toSql(getTableName());
+    return queryList(sql);
+  }
+
+  public List<T> queryList(String sql) throws CobwebException {
+    try (Connection conn = DataSourceManager.getConnection(POOL_NAME);
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery()) {
+      return ResultSetExtractor.extractValues(rs, getGenericClass());
+    } catch (SQLException e) {
+      throw new CobwebException(e);
+    }
+  }
+
+  public void batchExecute(List<String> sqlList) {
+
   }
 
   private Class<T> getGenericClass() {
@@ -86,6 +110,10 @@ public abstract class AbstractDao<T> {
 
   private String getTableName() {
     return EntityMapping.getTableName(this.getClass());
+  }
+
+  private String getIdCol() {
+    return EntityMapping.getIdColumn(this.getClass());
   }
 
   private String buildIdEq(Object idVal) {

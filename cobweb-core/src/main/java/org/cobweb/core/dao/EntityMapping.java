@@ -63,11 +63,13 @@ public class EntityMapping {
     EntityMapping entityMapping = orm.get(clazz);
     String colName = CaseFormat.LOWER_CAMEL
         .to(CaseFormat.UPPER_UNDERSCORE, entityMapping.id.getName());
-    return colName + "=" + wrapValueQuota(idValue);
+    return colName + "=" + DaoSupport.wrapValueQuota(idValue);
   }
 
-  public static String wrapValueQuota(Object value) {
-    return "'" + value.toString() + "'";
+  public static String getIdColumn(Class clazz) {
+    EntityMapping entityMapping = orm.get(clazz);
+    return CaseFormat.LOWER_CAMEL
+        .to(CaseFormat.UPPER_UNDERSCORE, entityMapping.id.getName());
   }
 
   public static void setColValue(Object entity, String col, Object value) {
