@@ -1,15 +1,19 @@
-package org.cobweb.core.bean;
+package org.cobweb.core.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.cobweb.core.annotation.Id;
+import org.cobweb.core.annotation.Table;
 import org.cobweb.core.constant.StoreTag;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class TopicSchemaBean {
+@Table("TOPIC_SCHEMA")
+public class TopicSchemaEntity {
 
+  @Id
   private Long id;
   private String name;
   private StoreTag tag;

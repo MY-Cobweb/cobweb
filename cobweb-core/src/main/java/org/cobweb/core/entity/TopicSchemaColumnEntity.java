@@ -1,14 +1,18 @@
-package org.cobweb.core.bean;
+package org.cobweb.core.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.cobweb.core.annotation.Id;
+import org.cobweb.core.annotation.Table;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class TopicSchemaColumnBean {
+@Table("TABLE_SCHEMA_COLUMN")
+public class TopicSchemaColumnEntity {
 
+  @Id
   private Long id;
   private Long topicSchemaId;
   private String columnName;
