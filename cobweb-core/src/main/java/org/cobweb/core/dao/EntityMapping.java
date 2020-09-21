@@ -28,6 +28,7 @@ public class EntityMapping {
   private FieldAccessor id;
   private String idColumnName;
   private final Map<String, FieldAccessor> colFieldMap = new HashMap<>();
+  private final Map<FieldAccessor, Class<?>> fieldTypeMap = new HashMap<>();
   private final Map<FieldAccessor, String> fieldColMap = new HashMap<>();
 
   public static void scanEntities() {
@@ -49,6 +50,7 @@ public class EntityMapping {
         } else {
           entityMapping.colFieldMap.putIfAbsent(colName, fieldAccessor);
           entityMapping.fieldColMap.putIfAbsent(fieldAccessor, colName);
+          entityMapping.fieldTypeMap.putIfAbsent(fieldAccessor, field.getType());
         }
       }
       orm.putIfAbsent(entity, entityMapping);
@@ -70,6 +72,16 @@ public class EntityMapping {
     return entityMapping.getFieldColMap();
   }
 
+  public static Map<String, FieldAccessor> getColFieldMap(Class clazz) {
+    EntityMapping entityMapping = orm.get(clazz);
+    return entityMapping.getColFieldMap();
+  }
+
+  public static Class<?> getFieldType(Class clazz, FieldAccessor fieldAccessor) {
+    EntityMapping entityMapping = orm.get(clazz);
+    return entityMapping.getFieldTypeMap().get(fieldAccessor);
+  }
+
   public static String buildIdEqCondition(Class clazz, Object idValue) {
     return getIdColumn(clazz) + "=" + DaoSupport.wrapValueQuota(idValue);
   }
@@ -79,7 +91,5 @@ public class EntityMapping {
     return entityMapping.getIdColumnName();
   }
 
-  public static void setColValue(Object entity, String col, Object value) {
 
-  }
 }

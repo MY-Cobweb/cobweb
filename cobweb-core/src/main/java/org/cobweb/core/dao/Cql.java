@@ -26,7 +26,7 @@ public class Cql {
     if (whereClause != null) {
       whereClause.append(" AND ");
     } else {
-      whereClause.append(" WHERE ");
+      whereClause = new StringBuilder(" WHERE ");
     }
     whereClause.append(column);
     return this;

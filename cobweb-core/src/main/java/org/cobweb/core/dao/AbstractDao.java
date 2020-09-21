@@ -98,8 +98,8 @@ public abstract class AbstractDao<T> {
     }
     sqlBuilder.append(StringUtils.join(columnList, ","))
         .append(") VALUES (").append(StringUtils.join(
-        valueList.stream().map(value -> DaoSupport.wrapValueQuota(value.toString()))
-            .collect(Collectors.toSet()), ","))
+        valueList.stream().map(value -> DaoSupport.wrapValueQuota(value))
+            .collect(Collectors.toList()), ","))
         .append(")");
     executeSql(sqlBuilder.toString(), "insert failure");
   }
@@ -128,7 +128,7 @@ public abstract class AbstractDao<T> {
         PreparedStatement stmt = conn.prepareStatement(sql);
         ResultSet rs = stmt.executeQuery()) {
       return ResultSetExtractor.extractValues(rs, getEntityClass());
-    } catch (SQLException e) {
+    } catch (SQLException | InstantiationException | IllegalAccessException e) {
       throw new CobwebDaoException(e);
     }
   }
