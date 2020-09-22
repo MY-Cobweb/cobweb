@@ -1,4 +1,4 @@
-package org.cobweb.server;
+package org.cobweb.core;
 
 /**
  * Base LifeCycle for a service or a server
@@ -7,6 +7,11 @@ package org.cobweb.server;
  * @since 0.0.1
  */
 public interface LifeCycle extends AutoCloseable {
+
+  /**
+   * init step
+   */
+  void init();
 
   /**
    * start the service and entering running status

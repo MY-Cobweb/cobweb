@@ -76,7 +76,7 @@ public abstract class AbstractDao<T> {
 
   public void delete(Long id) throws CobwebException {
     checkNotNull(id);
-    String sql = "DELETE FROM " + getTableName() + "WHERE " + buildIdEqCondition(id);
+    String sql = "DELETE FROM " + getTableName() + " WHERE " + buildIdEqCondition(id);
     executeSql(sql, "DELETE FROM " + getTableName() + " FAILURE FOR " + id);
   }
 

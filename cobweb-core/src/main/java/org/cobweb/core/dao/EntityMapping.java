@@ -27,6 +27,8 @@ public class EntityMapping {
   private String table;
   private FieldAccessor id;
   private String idColumnName;
+  private Class idType;
+
   private final Map<String, FieldAccessor> colFieldMap = new HashMap<>();
   private final Map<FieldAccessor, Class<?>> fieldTypeMap = new HashMap<>();
   private final Map<FieldAccessor, String> fieldColMap = new HashMap<>();
@@ -47,6 +49,7 @@ public class EntityMapping {
         if (id != null) {
           entityMapping.setId(fieldAccessor);
           entityMapping.setIdColumnName(colName);
+          entityMapping.setIdType(field.getType());
         } else {
           entityMapping.colFieldMap.putIfAbsent(colName, fieldAccessor);
           entityMapping.fieldColMap.putIfAbsent(fieldAccessor, colName);
@@ -68,7 +71,7 @@ public class EntityMapping {
   }
 
   public static Map<FieldAccessor, String> getFieldColMap(Class clazz) {
-    EntityMapping entityMapping =  orm.get(clazz);
+    EntityMapping entityMapping = orm.get(clazz);
     return entityMapping.getFieldColMap();
   }
 
@@ -91,5 +94,13 @@ public class EntityMapping {
     return entityMapping.getIdColumnName();
   }
 
+  public static FieldAccessor getIdField(Class clazz) {
+    EntityMapping entityMapping = orm.get(clazz);
+    return entityMapping.getId();
+  }
+
+  public static EntityMapping getEntityMapping(Class clazz) {
+    return orm.get(clazz);
+  }
 
 }

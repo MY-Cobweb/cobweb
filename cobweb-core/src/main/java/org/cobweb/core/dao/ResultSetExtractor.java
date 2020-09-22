@@ -28,17 +28,27 @@ public class ResultSetExtractor {
 
   private static <T> T extractValue(ResultSet rs, Class<T> clazz)
       throws SQLException, IllegalAccessException, InstantiationException {
-    Map<String, FieldAccessor> colFieldMap = EntityMapping.getColFieldMap(clazz);
     T t = clazz.newInstance();
-    for (Entry<String, FieldAccessor> entry : colFieldMap.entrySet()) {
-      Class<?> valueType = EntityMapping.getFieldType(clazz, entry.getValue());
-      // TODO MAPPING ENTITY VALUE
-      if (valueType.isEnum()) {
+    EntityMapping entityMapping = EntityMapping.getEntityMapping(clazz);
+    Map<String, FieldAccessor> colFieldMap = entityMapping.getColFieldMap();
 
-      }
-      entry.getValue().set(t, rs.getObject(entry.getKey(), valueType));
+    for (Entry<String, FieldAccessor> entry : colFieldMap.entrySet()) {
+      Class valueType = EntityMapping.getFieldType(clazz, entry.getValue());
+      setFieldValue(rs, valueType, t, entry.getKey(), entry.getValue());
     }
+    setFieldValue(rs, entityMapping.getIdType(), t, entityMapping.getIdColumnName(),
+        entityMapping.getId());
+    // set id value
     return t;
+  }
+
+  private static <T> void setFieldValue(ResultSet rs, Class valueType, T t,
+      String columnName, FieldAccessor field) throws IllegalAccessException, SQLException {
+    if (valueType.isEnum()) {
+      field.set(t, Enum.valueOf(valueType, rs.getString(columnName)));
+    } else {
+      field.set(t, rs.getObject(columnName, valueType));
+    }
   }
 
 }
