@@ -42,12 +42,12 @@ public abstract class AbstractDao<T> {
    */
   public T findById(Long id) throws CobwebException {
     checkNotNull(id);
-    String sql = Cql.cql().column(getIdCol()).is(id).toSql(getTableName());
+    String sql = Cql.select().column(getIdCol()).is(id).toSql(getTableName());
     return query(sql);
   }
 
   public List<T> findAll() throws CobwebException {
-    String sql = Cql.cql().toSql(getTableName());
+    String sql = Cql.select().toSql(getTableName());
     return queryList(sql);
   }
 
@@ -76,8 +76,8 @@ public abstract class AbstractDao<T> {
 
   public void delete(Long id) throws CobwebException {
     checkNotNull(id);
-    String sql = "DELETE FROM " + getTableName() + " WHERE " + buildIdEqCondition(id);
-    executeSql(sql, "DELETE FROM " + getTableName() + " FAILURE FOR " + id);
+    Cql cql = Cql.delete().column(EntityMapping.getIdColumn(getEntityClass())).is(id);
+    executeSql(cql.toSql(getTableName()), "DELETE FROM " + getTableName() + " FAILURE FOR " + id);
   }
 
   public void insert(T t) throws CobwebException {

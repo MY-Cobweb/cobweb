@@ -11,14 +11,24 @@ import org.apache.commons.lang3.StringUtils;
  * @since 0.0.1
  */
 public class Cql {
+
+  private SqlType sqlType;
   private StringBuilder selectClause = new StringBuilder("SELECT * FROM ");
+  private StringBuilder deleteClause = new StringBuilder("DELETE FROM ");
   private StringBuilder whereClause;
   private StringBuilder groupClause;
   private StringBuilder orderClause;
   private StringBuilder limitClause;
 
-  public static Cql cql() {
-    Cql cql =  new Cql();
+  public static Cql select() {
+    Cql cql = new Cql();
+    cql.sqlType = SqlType.SELECT;
+    return cql;
+  }
+
+  public static Cql delete() {
+    Cql cql = new Cql();
+    cql.sqlType = SqlType.DELETE;
     return cql;
   }
 
@@ -55,7 +65,20 @@ public class Cql {
   }
 
   public String toSql(String table) {
-    StringBuilder sqlBuilder = selectClause.append(table);
+    StringBuilder sqlBuilder;
+    switch (this.sqlType) {
+      case SELECT: {
+        sqlBuilder = selectClause.append(table);
+        break;
+      }
+      case DELETE: {
+        sqlBuilder = deleteClause.append(table);
+        break;
+      }
+      default: {
+        throw new UnsupportedOperationException(this.sqlType.name());
+      }
+    }
     if (whereClause != null) {
       sqlBuilder.append(whereClause);
     }
@@ -69,5 +92,10 @@ public class Cql {
       sqlBuilder.append(limitClause);
     }
     return sqlBuilder.toString();
+  }
+
+  private enum SqlType {
+    SELECT,
+    DELETE
   }
 }

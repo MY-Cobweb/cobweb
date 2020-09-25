@@ -12,7 +12,7 @@ import org.cobweb.core.exception.CobwebException;
 public class DataSourceDao extends AbstractDao<DataSourceEntity> {
 
   public DataSourceEntity findByName(String name) throws CobwebException {
-    return query(Cql.cql().column("NAME").is(name));
+    return query(Cql.select().column("NAME").is(name));
   }
 
 }
