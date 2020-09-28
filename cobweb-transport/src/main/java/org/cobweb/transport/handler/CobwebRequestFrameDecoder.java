@@ -21,6 +21,7 @@ public class CobwebRequestFrameDecoder extends LengthFieldBasedFrameDecoder {
   private static final int MAGIC_NUMBER = 0xCABD;
   private static final short VERSION = 1;
 
+
   public CobwebRequestFrameDecoder(int maxFrameLength, int lengthFieldOffset,
       int lengthFieldLength) {
     super(Integer.MAX_VALUE, 0, 4, -4, 4);
