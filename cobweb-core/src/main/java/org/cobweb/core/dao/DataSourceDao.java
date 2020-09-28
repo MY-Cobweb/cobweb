@@ -15,4 +15,7 @@ public class DataSourceDao extends AbstractDao<DataSourceEntity> {
     return query(Cql.select().column("NAME").is(name));
   }
 
+  public void deleteByName(String name) throws CobwebException {
+    executeSql(Cql.delete().column("NAME").is(name));
+  }
 }

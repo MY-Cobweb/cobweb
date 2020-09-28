@@ -1,4 +1,4 @@
-package org.cobweb.server;
+package org.cobweb.transport;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package org.cobweb.server;
+package org.cobweb.transport;
 
 /**
  * @author meijie

@@ -1,4 +1,4 @@
-package org.cobweb.server;
+package org.cobweb.transport;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;

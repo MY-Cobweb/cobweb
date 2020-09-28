@@ -1,4 +1,4 @@
-package org.cobweb.server.handler;
+package org.cobweb.transport.handler;
 
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 

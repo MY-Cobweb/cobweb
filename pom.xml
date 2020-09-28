@@ -37,6 +37,7 @@
     <module>cobweb-client</module>
     <module>cobweb-sql</module>
     <module>cobweb-server</module>
+    <module>cobweb-transport</module>
   </modules>
 
 

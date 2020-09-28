@@ -133,6 +133,10 @@ public abstract class AbstractDao<T> {
     }
   }
 
+  public void executeSql(Cql cql) throws CobwebException {
+    executeSql(cql.toSql(getTableName()), "");
+  }
+
   public void executeSql(String sql, String failureMsg) throws CobwebException {
     try (Connection conn = DataSourceManager.getConnection(POOL_NAME);
         PreparedStatement stmt = conn.prepareStatement(sql);) {
