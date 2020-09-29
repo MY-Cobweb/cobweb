@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option java_package = "org.cobweb.transport.message";
+option java_outer_classname = "DimProtocol";
+
+message condition {
+  string column = 1;
+  string value = 2;
+}
+
+message dimAggRequest {
+  repeated string dims = 1;
+  repeated string metrics = 2;
+  repeated condition conds = 3;
+  repeated string orders = 4;
+  bool asc = 5;
+  uint32 page = 6;
+  uint32 page_size = 7;
+  uint32 dt = 8;
+}
+
+message dimAggResponse {
+  repeated column columns = 1;
+}
+
+message column {
+  string name = 1;
+  repeated string values = 2;
+}
+
+message dimAggCountRequest {
+  repeated string dims = 1;
+  repeated condition conds = 2;
+  uint32 dt = 3;
+}
+
+message dimAggCountResponse {
+  repeated uint32 cnt = 1;
+}
+
+

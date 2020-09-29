@@ -8,6 +8,6 @@ import io.netty.channel.ChannelOutboundHandlerAdapter;
  * @author meijie
  * @since 0.0.1
  */
-public class CobwebResponseFrameEncoder extends ChannelOutboundHandlerAdapter {
+public class TransportFrameEncoder extends ChannelOutboundHandlerAdapter {
 
 }

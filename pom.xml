@@ -100,9 +100,16 @@
   </dependencies>
 
   <build>
+    <extensions>
+      <extension>
+        <groupId>kr.motd.maven</groupId>
+        <artifactId>os-maven-plugin</artifactId>
+        <version>1.6.2</version>
+      </extension>
+    </extensions>
+
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
-
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.1.0</version>
@@ -150,6 +157,26 @@
                   <source>${basedir}/target/generated-sources</source>
                 </sources>
               </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.xolstice.maven.plugins</groupId>
+          <artifactId>protobuf-maven-plugin</artifactId>
+          <version>0.6.1</version>
+          <extensions>true</extensions>
+          <configuration>
+            <protocArtifact>
+              com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
+            </protocArtifact>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>compile</goal>
+                <goal>test-compile</goal>
+              </goals>
             </execution>
           </executions>
         </plugin>

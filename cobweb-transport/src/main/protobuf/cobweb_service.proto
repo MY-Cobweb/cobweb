@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option java_package = "org.cobweb.transport.message";
+option java_outer_classname = "CobwebService";
+
+import "google/protobuf/any.proto";
+
+message CobwebRequest {
+  CobwebRequestHeader header = 1;
+  google.protobuf.Any body = 2;
+}
+
+message CobwebRequestHeader {
+  uint32 retry = 1;
+  uint32 type = 2;
+}
+
+message CobwebResponse {
+  CobwebResponseHeader header = 1;
+  google.protobuf.Any responseBody = 2;
+}
+
+message CobwebResponseHeader {
+  uint32 code = 1;
+  string message = 2;
+}
+
+service CobwebService {
+  rpc call(CobwebRequest) returns (CobwebResponse);
+}
+
+

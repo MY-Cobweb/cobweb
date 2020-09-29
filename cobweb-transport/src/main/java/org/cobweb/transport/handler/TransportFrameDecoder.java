@@ -16,14 +16,13 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
  * @author meijie
  * @since 0.0.1
  */
-public class CobwebRequestFrameDecoder extends LengthFieldBasedFrameDecoder {
+public class TransportFrameDecoder extends LengthFieldBasedFrameDecoder {
 
   private static final int MAGIC_NUMBER = 0xCABD;
   private static final short VERSION = 1;
 
 
-  public CobwebRequestFrameDecoder(int maxFrameLength, int lengthFieldOffset,
-      int lengthFieldLength) {
+  public TransportFrameDecoder() {
     super(Integer.MAX_VALUE, 0, 4, -4, 4);
   }
 
@@ -35,11 +34,7 @@ public class CobwebRequestFrameDecoder extends LengthFieldBasedFrameDecoder {
     }
     checkMagicNumber(msg);
     checkVersion(msg);
-    return decodeMsg(msg);
-  }
-
-  private Object decodeMsg(ByteBuf msg) {
-    return null;
+    return msg;
   }
 
   private void checkMagicNumber(ByteBuf msg) {
