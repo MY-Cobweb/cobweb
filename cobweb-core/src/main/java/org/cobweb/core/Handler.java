@@ -6,7 +6,8 @@ package org.cobweb.core;
  * @author meijie
  * @since 0.0.1
  */
-public interface Handler<T> {
+public interface Handler<EVENT, RESULT> {
 
-  void handle(T event);
+  void handle(EVENT event, Callback<RESULT> callback);
+
 }

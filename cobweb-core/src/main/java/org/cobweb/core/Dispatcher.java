@@ -1,6 +1,5 @@
 package org.cobweb.core;
 
-import org.cobweb.core.constant.RequestType;
 
 /**
  * Dispatcher dispatch event to target handler.
@@ -8,14 +7,14 @@ import org.cobweb.core.constant.RequestType;
  * @author meijie
  * @since 0.0.1
  */
-public interface Dispatcher<T> {
+public interface Dispatcher<T, E> {
 
   /**
    * Dispatcher the event to target handler
    *
-   * @param t
+   * @param e
    */
-  void dispatch(T t);
+  void dispatch(E e);
 
   /**
    * Registry the handler to process target event.
@@ -23,7 +22,7 @@ public interface Dispatcher<T> {
    * @param type
    * @param handler
    */
-  void registry(RequestType type, Handler handler);
+  void registry(T type, Handler handler);
 
   /**
    * UnRegistry the handler.
@@ -31,5 +30,5 @@ public interface Dispatcher<T> {
    * @param type
    * @param handler
    */
-  void unRegistry(RequestType type, Handler handler);
+  void unRegistry(T type, Handler handler);
 }
