@@ -11,6 +11,10 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.cobweb.core.LifeCycle;
+import org.cobweb.transport.handler.CobwebRequestDispatcher;
+import org.cobweb.transport.handler.ProtobufServiceServerCodec;
+import org.cobweb.transport.handler.TransportFrameDecoder;
+import org.cobweb.transport.handler.TransportFrameEncoder;
 
 /**
  * Cobweb Server
@@ -51,8 +55,13 @@ public class CobwebServer implements LifeCycle {
         .channel(serverSocketChannelClass)
         .childHandler(new ChannelInitializer<SocketChannel>() {
           @Override
-          protected void initChannel(SocketChannel socketChannel) throws Exception {
-
+          protected void initChannel(SocketChannel channel) throws Exception {
+            channel.pipeline().addLast(
+                new TransportFrameDecoder(),
+                new ProtobufServiceServerCodec(),
+                new CobwebRequestDispatcher(),
+                new TransportFrameEncoder()
+            );
           }
         })
         // TODO ADJUST THE PARAMETERS FOR PERFORMANCE

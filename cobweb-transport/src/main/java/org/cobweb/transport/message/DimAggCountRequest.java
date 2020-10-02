@@ -10,11 +10,11 @@ import java.util.List;
  * @author meijie
  * @since 0.0.1
  */
-public class DimAggCountRequest implements Request{
+public class DimAggCountRequest implements Request {
 
   public static final RequestType type = RequestType.DIM_AGG_CNT;
-  private List<String> dims;
-  private List<Condition> conds;
+  private List<String> dimList;
+  private List<Condition> condList;
 
   @Override
   public RequestType type() {
@@ -24,10 +24,20 @@ public class DimAggCountRequest implements Request{
   @Override
   public Request fromMessage(Any any) throws InvalidProtocolBufferException {
     checkNotNull(any);
-    ServiceProtocol.DimAggCountRequest protobufRequest = any.unpack(ServiceProtocol.DimAggCountRequest.class);
-    this.dims = protobufRequest.getDimsList();
-    this.conds = Condition.toConditions(protobufRequest.getCondsList());
-
+    MessageProtocol.DimAggCountRequest protobufRequest = any
+        .unpack(MessageProtocol.DimAggCountRequest.class);
+    this.dimList = protobufRequest.getDimList();
+    this.condList = Condition.toConditions(protobufRequest.getCondList());
     return this;
+  }
+
+  @Override
+  public MessageProtocol.DimAggCountRequest encode() {
+    return MessageProtocol.DimAggCountRequest
+        .newBuilder()
+        .addAllDim(dimList)
+        .addAllCond(Condition.encodeProtoConditions(condList))
+        .build();
+
   }
 }

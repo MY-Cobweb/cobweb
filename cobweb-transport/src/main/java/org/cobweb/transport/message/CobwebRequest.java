@@ -2,10 +2,11 @@ package org.cobweb.transport.message;
 
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.cobweb.transport.message.ServiceProtocol.CobwebRequestHeader;
+import org.cobweb.transport.message.MessageProtocol.CobwebRequestHeader;
 
 /**
  * CobwebRequest
@@ -27,7 +28,7 @@ public class CobwebRequest {
    */
   public static Request buildFrom(CodedInputStream cis)
       throws InvalidProtocolBufferException {
-    ServiceProtocol.CobwebRequest protobufRequest = ServiceProtocol.CobwebRequest
+    MessageProtocol.CobwebRequest protobufRequest = MessageProtocol.CobwebRequest
         .getDefaultInstance().getParserForType().parseFrom(cis);
     CobwebRequestHeader header = protobufRequest.getHeader();
     RequestType type = RequestType.valueOf(header.getParamType());
@@ -47,4 +48,7 @@ public class CobwebRequest {
     }
   }
 
+  public static Message encode(Request request) {
+    return request.encode();
+  }
 }

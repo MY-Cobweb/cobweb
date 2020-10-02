@@ -11,10 +11,10 @@ import java.util.List;
 public class DimAggRequest implements Request {
 
   private static final RequestType type = RequestType.DIM_AGG;
-  private List<String> dims;
-  private List<String> metrics;
-  private List<Condition> conds;
-  private List<String> orders;
+  private List<String> dimList;
+  private List<String> metricList;
+  private List<Condition> condList;
+  private List<String> orderList;
   private boolean asc;
   // page start from 1
   private Integer page;
@@ -27,14 +27,28 @@ public class DimAggRequest implements Request {
 
   @Override
   public Request fromMessage(Any any) throws InvalidProtocolBufferException {
-    ServiceProtocol.DimAggRequest protobufRequest = any.unpack(ServiceProtocol.DimAggRequest.class);
-    this.dims = protobufRequest.getDimsList();
-    this.metrics = protobufRequest.getMetricsList();
-    this.conds = Condition.toConditions(protobufRequest.getCondsList());
-    this.orders = protobufRequest.getOrdersList();
+    MessageProtocol.DimAggRequest protobufRequest = any.unpack(MessageProtocol.DimAggRequest.class);
+    this.dimList = protobufRequest.getDimsList();
+    this.metricList = protobufRequest.getMetricList();
+    this.condList = Condition.toConditions(protobufRequest.getCondList());
+    this.orderList = protobufRequest.getOrderList();
     this.asc = protobufRequest.getAsc();
     this.page = protobufRequest.getPage();
     this.pageSize = protobufRequest.getPageSize();
     return this;
+  }
+
+  @Override
+  public MessageProtocol.DimAggRequest encode() {
+    return MessageProtocol.DimAggRequest
+        .newBuilder()
+        .addAllDims(dimList)
+        .addAllMetric(metricList)
+        .addAllCond(Condition.encodeProtoConditions(condList))
+        .addAllOrder(orderList)
+        .setAsc(asc)
+        .setPage(page)
+        .setPageSize(pageSize)
+        .build();
   }
 }

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option java_package = "org.cobweb.transport.message";
-option java_outer_classname = "ServiceProtocol";
+option java_outer_classname = "MessageProtocol";
 option java_generic_services = true;
 
 import "google/protobuf/any.proto";
@@ -13,9 +13,9 @@ message Condition {
 
 message DimAggRequest {
   repeated string dims = 1;
-  repeated string metrics = 2;
-  repeated Condition conds = 3;
-  repeated string orders = 4;
+  repeated string metric = 2;
+  repeated Condition cond = 3;
+  repeated string order = 4;
   bool asc = 5;
   uint32 page = 6;
   uint32 page_size = 7;
@@ -23,17 +23,17 @@ message DimAggRequest {
 }
 
 message DimAggResponse {
-  repeated Column columns = 1;
+  repeated Column column = 1;
 }
 
 message Column {
   string name = 1;
-  repeated string values = 2;
+  repeated string value = 2;
 }
 
 message DimAggCountRequest {
-  repeated string dims = 1;
-  repeated Condition conds = 2;
+  repeated string dim = 1;
+  repeated Condition cond = 2;
   uint32 dt = 3;
 }
 

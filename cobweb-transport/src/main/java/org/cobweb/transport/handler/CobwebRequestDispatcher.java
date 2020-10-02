@@ -16,7 +16,7 @@ public class CobwebRequestDispatcher extends SimpleChannelInboundHandler<Request
 
   @Override
   protected void channelRead0(ChannelHandlerContext ctx, Request msg) throws Exception {
-
+    System.out.println(msg.type().name());
   }
 
   @Override

@@ -13,7 +13,7 @@ import org.cobweb.transport.message.Request;
  * @author meijie
  * @since 0.0.1
  */
-public class ProtobufServiceCodec extends ByteToMessageCodec<CobwebResponse> {
+public class ProtobufServiceServerCodec extends ByteToMessageCodec<CobwebResponse> {
 
   @Override
   protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
@@ -27,6 +27,5 @@ public class ProtobufServiceCodec extends ByteToMessageCodec<CobwebResponse> {
       throws Exception {
 
   }
-
 
 }
