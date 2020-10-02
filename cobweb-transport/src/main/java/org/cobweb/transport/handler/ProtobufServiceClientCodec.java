@@ -21,7 +21,7 @@ public class ProtobufServiceClientCodec extends ByteToMessageCodec<Request> {
       throws Exception {
     MessageProtocol.CobwebRequestHeader protoHeader = MessageProtocol.CobwebRequestHeader
         .newBuilder()
-        .setParamType(msg.type().name())
+        .setType(msg.type().name())
         .build();
     Message payload = CobwebRequest.encode(msg);
 

@@ -3,13 +3,14 @@ package org.cobweb.transport.handler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import org.omg.CORBA.PRIVATE_MEMBER;
 
 /**
  * Decoder Request Frame
  *
  * <pre>
  * +------------------------------------------------------------------------------|
- * | FRAME LENGTH(4) | MAGIC NUMBER(4) | VERSION(2) | SERVICE NAME | MESSAGE BODY |
+ * | FRAME LENGTH(4) | MAGIC NUMBER(4) | VERSION(2) | MESSAGE TYPE | MESSAGE BODY |
  * +------------------------------------------------------------------------------|
  * </pre>
  *
@@ -19,6 +20,7 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 public class TransportFrameDecoder extends LengthFieldBasedFrameDecoder {
 
   private static final int MAGIC_NUMBER = 0xCABD;
+
   private static final short VERSION = 1;
 
   public TransportFrameDecoder() {

@@ -1,6 +1,5 @@
 package org.cobweb.transport.message;
 
-public interface Response {
+public interface Response extends ResponseCodec {
 
-  byte[] encode();
 }

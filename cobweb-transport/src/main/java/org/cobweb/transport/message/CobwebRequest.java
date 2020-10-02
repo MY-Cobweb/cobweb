@@ -1,5 +1,6 @@
 package org.cobweb.transport.message;
 
+import com.google.protobuf.Any;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
@@ -26,29 +27,32 @@ public class CobwebRequest {
    * @return
    * @throws InvalidProtocolBufferException
    */
-  public static Request buildFrom(CodedInputStream cis)
-      throws InvalidProtocolBufferException {
+  public static Request decode(CodedInputStream cis)
+      throws Exception {
     MessageProtocol.CobwebRequest protobufRequest = MessageProtocol.CobwebRequest
         .getDefaultInstance().getParserForType().parseFrom(cis);
     CobwebRequestHeader header = protobufRequest.getHeader();
-    RequestType type = RequestType.valueOf(header.getParamType());
+    RequestType type = RequestType.valueOf(header.getType());
     switch (type) {
       case DIM_AGG: {
-        DimAggRequest request = new DimAggRequest();
-        request.fromMessage(protobufRequest.getPayload());
-        return request;
+        return new DimAggRequest().decode(protobufRequest.getPayload());
       }
       case DIM_AGG_CNT: {
-        DimAggCountRequest request = new DimAggCountRequest();
-        request.fromMessage(protobufRequest.getPayload());
-        return request;
+        return new DimAggCountRequest().decode(protobufRequest.getPayload());
       }
       default:
         throw new UnsupportedOperationException("unsupported request type " + type.name());
     }
   }
 
-  public static Message encode(Request request) {
-    return request.encode();
+  public static Message encode(Request request) throws Exception {
+    CobwebRequestHeader header = CobwebRequestHeader.newBuilder()
+        .setType(request.type().name())
+        .build();
+
+    return MessageProtocol.CobwebRequest.newBuilder()
+        .setHeader(header)
+        .setPayload(Any.pack(request.encode()))
+        .build();
   }
 }

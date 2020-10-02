@@ -38,7 +38,7 @@ message DimAggCountRequest {
 }
 
 message DimAggCountResponse {
-  repeated uint32 cnt = 1;
+  uint32 cnt = 1;
 }
 
 message CobwebRequest {
@@ -47,7 +47,7 @@ message CobwebRequest {
 }
 
 message CobwebRequestHeader {
-  string paramType = 1;
+  string type = 1;
 }
 
 message CobwebResponse {
@@ -56,6 +56,8 @@ message CobwebResponse {
 }
 
 message CobwebResponseHeader {
-  uint32 code = 1;
+  string type = 1;
+  uint32 code = 2;
+  string message = 3;
 }
 
